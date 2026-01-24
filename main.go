@@ -3,9 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/joho/godotenv"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
+	"log"
 )
 
 type Category struct {
@@ -21,6 +24,16 @@ var category = []Category{
 }
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("No .env file found, using system env")
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	http.HandleFunc("/api/categories/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
@@ -61,8 +74,8 @@ func main() {
 		}
 	})
 
-	fmt.Println("Server running at http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	fmt.Println("Server running at http://localhost:" + port)
+	http.ListenAndServe(":"+port, nil)
 }
 
 func getCategoryById(w http.ResponseWriter, r *http.Request) {
