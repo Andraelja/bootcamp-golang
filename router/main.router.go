@@ -21,6 +21,8 @@ func RegisterRoutes() {
 		switch r.Method {
 		case http.MethodGet:
 			handler.GetCategoryById(w, r)
+		case http.MethodPut:
+			handler.UpdateCategory(w, r)
 		}
 	})
 }

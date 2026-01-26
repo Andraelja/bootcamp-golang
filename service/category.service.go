@@ -28,3 +28,17 @@ func StoreCategory(category entity.Category) entity.Category {
 	data.Categories = append(data.Categories, category)
 	return category
 }
+
+func UpdateCategory(id int, category entity.Category) (entity.Category, error) {
+	// looping untuk ambil data yang mau diedit
+	for i, v := range data.Categories {
+		if v.ID == id {
+			category.ID = id
+			// ambil array yg akan diedit, kemudia set
+			data.Categories[i] = category
+			return category, nil
+		}
+	}
+
+	return entity.Category{}, ErrCategoryNotFound
+}
