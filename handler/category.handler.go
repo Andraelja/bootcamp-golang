@@ -69,3 +69,19 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	Success(w, http.StatusOK, "Success Update data", update)
 }
+
+func DeleteCategory(w http.ResponseWriter, r *http.Request) {
+	id, err := helper.ParseID(r, "/api/categories/")
+	if err != nil {
+		Error(w, http.StatusBadRequest, "Invalid category ID", err.Error())
+		return
+	}
+
+	product, err := service.DeleteCategory(id)
+	if err != nil {
+		Error(w, http.StatusNotFound, "Category not found", nil)
+		return
+	}
+
+	Success(w, http.StatusOK, "Category deleted", product)
+}

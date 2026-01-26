@@ -23,6 +23,8 @@ func RegisterRoutes() {
 			handler.GetCategoryById(w, r)
 		case http.MethodPut:
 			handler.UpdateCategory(w, r)
+		case http.MethodDelete:
+			handler.DeleteCategory(w, r)
 		}
 	})
 }

@@ -42,3 +42,15 @@ func UpdateCategory(id int, category entity.Category) (entity.Category, error) {
 
 	return entity.Category{}, ErrCategoryNotFound
 }
+
+func DeleteCategory(id int) (entity.Category, error) {
+	// looping untuk ambil data yg mau dihapus
+	for i, category := range data.Categories {
+		if category.ID == id {
+			data.Categories = append(data.Categories[:i], data.Categories[i+1:]...)
+			return category, nil
+		}
+	}
+
+	return entity.Category{}, ErrCategoryNotFound
+}
