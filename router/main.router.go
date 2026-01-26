@@ -1,10 +1,26 @@
 package router
 
 import (
-	"task-session-1/handler"
 	"net/http"
+	"task-session-1/handler"
 )
 
 func RegisterRoutes() {
 	http.HandleFunc("/health", handler.HealtHeandler)
+
+	http.HandleFunc("/api/categories", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			handler.GetAllCategory(w, r)
+		case http.MethodPost:
+			handler.StoreCategory(w, r)
+		}
+	})
+
+	http.HandleFunc("/api/categories/", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			handler.GetCategoryById(w, r)
+		}
+	})
 }
