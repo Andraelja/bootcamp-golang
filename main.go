@@ -9,6 +9,9 @@ import (
 	"github.com/spf13/viper"
 
 	"task-session-1/database"
+	"task-session-1/handlers"
+	"task-session-1/repositories"
+	"task-session-1/services"
 )
 
 type Config struct {
@@ -48,6 +51,13 @@ func main() {
 
 	addr := "0.0.0.0:" + config.Port
 	fmt.Println("Server running di", addr)
+
+	categoryRepo := repositories.NewCategoryRepository(db)
+	categoryService := services.NewCategoryService(categoryRepo)
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
+
+	http.HandleFunc("/api/category", categoryHandler.HandleCategory)
+	http.HandleFunc("/api/category/", categoryHandler.HandleCategoryByID)
 
 	// Start server
 	if err := http.ListenAndServe(addr, nil); err != nil {
