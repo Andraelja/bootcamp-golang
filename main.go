@@ -2,27 +2,55 @@ package main
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
-	"os"
-	"task-session-1/router"
+
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+
+	"task-session-1/database"
 )
+
+type Config struct {
+	Port   string `mapstructure:"PORT"`
+	DBConn string `mapstructure:"DB_CONN"`
+}
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
+	// Load .env
+	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, using system env")
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	// Read ENV
+	viper.AutomaticEnv()
+
+	config := Config{
+		Port:   viper.GetString("PORT"),
+		DBConn: viper.GetString("DB_CONN"),
 	}
 
-	router.RegisterRoutes()
+	// Validasi config
+	if config.Port == "" {
+		log.Fatal("PORT is required")
+	}
+	if config.DBConn == "" {
+		log.Fatal("DB_CONN is required")
+	}
 
-	fmt.Println("Server running at http://localhost:" + port)
-	http.ListenAndServe(":"+port, nil)
+	// Init DB
+	db, err := database.InitDB(config.DBConn)
+	if err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+	defer db.Close()
+
+	addr := "0.0.0.0:" + config.Port
+	fmt.Println("Server running di", addr)
+
+	// Start server
+	if err := http.ListenAndServe(addr, nil); err != nil {
+		log.Fatal("gagal running server:", err)
+	}
 }
