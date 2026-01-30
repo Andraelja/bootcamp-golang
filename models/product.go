@@ -5,4 +5,8 @@ type Product struct {
 	Name  string `json:"name"`
 	Price int    `json:"price"`
 	Stock int    `json:"stock"`
+	CategoryID	int `json:"category_id"`
+
+	// relasi ke tabel category
+	Category	*Category`json:"category,omitempty"`
 }
