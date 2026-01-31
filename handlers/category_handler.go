@@ -1,23 +1,39 @@
+// Package handlers berisi kode untuk menangani request HTTP.
+// Handler layer menerima request dari client, memanggil service, dan mengembalikan response.
+// Ini memisahkan logika HTTP dari logika bisnis.
 package handlers
 
+// Import library yang diperlukan.
+// encoding/json digunakan untuk encode/decode JSON.
+// models digunakan untuk struct data.
+// services digunakan untuk logika bisnis.
+// net/http adalah package standar untuk HTTP.
+// strconv digunakan untuk konversi string ke int.
+// strings digunakan untuk manipulasi string.
 import (
 	"encoding/json"
-	"task-session-1/models"
-	"task-session-1/services"
 	"net/http"
 	"strconv"
 	"strings"
+	"task-session-1/models"
+	"task-session-1/services"
 )
 
+// CategoryHandler adalah struct yang menangani request HTTP untuk kategori.
+// service adalah dependency ke CategoryService untuk logika bisnis.
 type CategoryHandler struct {
 	service *services.CategoryService
 }
 
+// NewCategoryHandler adalah konstruktor untuk membuat instance CategoryHandler.
+// Menerima CategoryService sebagai parameter dan mengembalikan pointer ke CategoryHandler.
 func NewCategoryHandler(service *services.CategoryService) *CategoryHandler {
 	return &CategoryHandler{service: service}
 }
 
-// HandleCategory - GET /api/category
+// HandleCategory menangani request ke /api/category.
+// Berdasarkan metode HTTP (GET untuk GetAll, POST untuk Create).
+// Jika metode tidak didukung, kembalikan error 405 Method Not Allowed.
 func (h *CategoryHandler) HandleCategory(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -29,6 +45,9 @@ func (h *CategoryHandler) HandleCategory(w http.ResponseWriter, r *http.Request)
 	}
 }
 
+// GetAll menangani GET /api/category untuk mengambil semua kategori.
+// Memanggil service.GetAll(), lalu encode hasil ke JSON dan kirim sebagai response.
+// Jika ada error, kembalikan status 500 Internal Server Error.
 func (h *CategoryHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	category, err := h.service.GetAll()
 	if err != nil {
@@ -40,6 +59,10 @@ func (h *CategoryHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(category)
 }
 
+// Create menangani POST /api/category untuk membuat kategori baru.
+// Decode JSON dari request body ke struct Category.
+// Panggil service.Create(), lalu encode hasil ke JSON dan kirim sebagai response dengan status 201 Created.
+// Jika ada error, kembalikan status 400 Bad Request.
 func (h *CategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var category models.Category
 	err := json.NewDecoder(r.Body).Decode(&category)
@@ -59,7 +82,9 @@ func (h *CategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(category)
 }
 
-// HandleCategoryByID - GET/PUT/DELETE /api/category/{id}
+// HandleCategoryByID menangani request ke /api/category/{id}.
+// Berdasarkan metode HTTP (GET untuk GetByID, PUT untuk Update, DELETE untuk Delete).
+// Jika metode tidak didukung, kembalikan error 405 Method Not Allowed.
 func (h *CategoryHandler) HandleCategoryByID(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -73,7 +98,11 @@ func (h *CategoryHandler) HandleCategoryByID(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-// GetByID - GET /api/category/{id}
+// GetByID menangani GET /api/category/{id} untuk mengambil kategori berdasarkan ID.
+// Ekstrak ID dari URL path, konversi ke int.
+// Panggil service.GetByID(), lalu encode hasil ke JSON.
+// Jika ID invalid, kembalikan status 400 Bad Request.
+// Jika kategori tidak ditemukan, kembalikan status 404 Not Found.
 func (h *CategoryHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/api/category/")
 	id, err := strconv.Atoi(idStr)
@@ -92,6 +121,10 @@ func (h *CategoryHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(category)
 }
 
+// Update menangani PUT /api/category/{id} untuk memperbarui kategori.
+// Ekstrak ID dari URL, decode JSON dari body.
+// Set ID ke category, panggil service.Update(), lalu encode hasil ke JSON.
+// Jika ada error, kembalikan status 400 Bad Request.
 func (h *CategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/api/category/")
 	id, err := strconv.Atoi(idStr)
@@ -118,7 +151,10 @@ func (h *CategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(category)
 }
 
-// Delete - DELETE /api/category/{id}
+// Delete menangani DELETE /api/category/{id} untuk menghapus kategori.
+// Ekstrak ID dari URL, panggil service.Delete().
+// Jika berhasil, kirim response JSON dengan pesan sukses.
+// Jika ada error, kembalikan status 500 Internal Server Error.
 func (h *CategoryHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/api/category/")
 	id, err := strconv.Atoi(idStr)
