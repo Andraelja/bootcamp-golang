@@ -85,5 +85,20 @@ func (s *ProductService) GetByID(id int) (*models.Product, error) {
 }
 
 func (s *ProductService) Update(product *models.Product) error {
+	if product.CategoryID == 0 {
+		return errors.New("Category cannot empty!")
+	}
+
+	// Mengambil data kategori berdasarkan ID untuk memastikan kategori ada.
+	category, err := s.categoryRepo.GetByID(product.CategoryID)
+	if err != nil {
+		return err
+	}
+
+	// Jika kategori tidak ditemukan (nil), kembalikan error.
+	if category == nil {
+		return errors.New("Category not found!")
+	}
+	
 	return s.productRepo.Update(product)
 }
