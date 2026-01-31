@@ -1,14 +1,5 @@
-// Package main adalah titik masuk utama dari aplikasi Go ini.
-// Aplikasi ini adalah REST API sederhana untuk mengelola kategori dan produk menggunakan database PostgreSQL.
 package main
 
-// Import library yang diperlukan untuk aplikasi ini.
-// fmt digunakan untuk mencetak output ke konsol.
-// log digunakan untuk logging error dan informasi.
-// net/http digunakan untuk membuat server HTTP.
-// godotenv digunakan untuk memuat file .env.
-// viper digunakan untuk membaca konfigurasi dari environment variables.
-// Package lokal: database, handlers, repositories, services untuk arsitektur aplikasi.
 import (
 	"fmt"
 	"log"

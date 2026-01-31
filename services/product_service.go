@@ -1,12 +1,5 @@
-// Package services berisi logika bisnis aplikasi.
-// Service layer bertindak sebagai perantara antara handler (yang menangani HTTP) dan repository (yang mengakses database).
-// Ini memungkinkan pemisahan tanggung jawab dan memudahkan testing.
 package services
 
-// Import library yang diperlukan.
-// errors digunakan untuk membuat error custom.
-// models digunakan untuk struct data seperti Product.
-// repositories digunakan untuk mengakses data dari database.
 import (
 	"errors"
 	"task-session-1/models"

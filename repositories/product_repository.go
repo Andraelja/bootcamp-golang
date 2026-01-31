@@ -1,11 +1,5 @@
-// Package repositories berisi kode untuk mengakses database.
-// Repository layer mengabstraksi operasi database, sehingga kode lain tidak perlu tahu detail SQL.
-// Ini memudahkan perubahan database atau testing dengan mock.
 package repositories
 
-// Import library yang diperlukan.
-// database/sql digunakan untuk koneksi dan query database.
-// models digunakan untuk struct data seperti Product.
 import (
 	"database/sql"
 	"errors"

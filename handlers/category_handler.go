@@ -1,15 +1,5 @@
-// Package handlers berisi kode untuk menangani request HTTP.
-// Handler layer menerima request dari client, memanggil service, dan mengembalikan response.
-// Ini memisahkan logika HTTP dari logika bisnis.
 package handlers
 
-// Import library yang diperlukan.
-// encoding/json digunakan untuk encode/decode JSON.
-// models digunakan untuk struct data.
-// services digunakan untuk logika bisnis.
-// net/http adalah package standar untuk HTTP.
-// strconv digunakan untuk konversi string ke int.
-// strings digunakan untuk manipulasi string.
 import (
 	"encoding/json"
 	"net/http"
