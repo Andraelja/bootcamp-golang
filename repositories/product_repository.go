@@ -36,9 +36,7 @@ func (repo *ProductRepository) GetAll() ([]models.Product, error) {
 			p.name,
 			p.price,
 			p.stock,
-			p.category_id,
-			c.id,
-			c.name
+			p.category_id
 			FROM product p JOIN category c ON c.id = p.category_id`
 	// Menjalankan query dan mendapatkan rows.
 	rows, err := repo.db.Query(query)
