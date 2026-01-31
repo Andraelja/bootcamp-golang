@@ -90,6 +90,8 @@ func main() {
 	http.HandleFunc("/api/category/", categoryHandler.HandleCategoryByID)
 	// /api/product untuk operasi produk (GET semua, POST buat baru).
 	http.HandleFunc("/api/product", productHandler.HandleProduct)
+	// /api/product/ untuk operasi berdasarkan ID (GET, PUT, DELETE).
+	http.HandleFunc("/api/product/", productHandler.HandleProductByID)
 
 	// Menjalankan server HTTP di alamat yang ditentukan.
 	// Jika gagal, aplikasi akan berhenti dengan pesan error.

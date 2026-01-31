@@ -110,7 +110,7 @@ func (repo *CategoryRepository) Update(category *models.Category) error {
 
 	// Jika tidak ada baris yang terpengaruh, kategori tidak ditemukan.
 	if rows == 0 {
-		return errors.New("kategori tidak ditemukan")
+		return errors.New("Category not found!")
 	}
 
 	return nil

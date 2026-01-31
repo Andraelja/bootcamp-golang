@@ -8,6 +8,7 @@ package repositories
 // models digunakan untuk struct data seperti Product.
 import (
 	"database/sql"
+	"errors"
 	// "errors" // Tidak digunakan, dikomentari.
 	"task-session-1/models"
 )
@@ -86,13 +87,14 @@ func (repo *ProductRepository) GetByID(id int) (*models.Product, error) {
 			p.id,
 			p.name,
 			p.price,
+			p.stock,
 			p.category_id
-			stock FROM product p WHERE id=$1
+			FROM product p WHERE id=$1
 			`
 	var p models.Product
 	// Menjalankan query dan scan hasil ke struct Product.
 	// Perhatian: Scan tidak sesuai dengan field yang dipilih (kurang stock, tambah category_id).
-	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock, p.CategoryID)
+	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock, &p.CategoryID)
 
 	// Jika tidak ada row ditemukan, kembalikan nil.
 	if err == sql.ErrNoRows {
@@ -106,4 +108,29 @@ func (repo *ProductRepository) GetByID(id int) (*models.Product, error) {
 
 	// Kembalikan pointer ke produk.
 	return &p, nil
+}
+
+func (repo *ProductRepository) Update(product *models.Product) error {
+	query := `
+			UPDATE product SET 
+			name=$1, 
+			price=$2, 
+			stock=$3, 
+			category_id=$4 
+			WHERE id=$5`
+	result, err := repo.db.Exec(query, product.Name, product.Price, product.Stock, product.CategoryID, product.ID)
+	if err != nil {
+		return err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return errors.New("Product not found")
+	}
+
+	return nil
 }

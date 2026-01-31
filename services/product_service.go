@@ -66,3 +66,24 @@ func (s *ProductService) Create(data *models.Product) error {
 	// Jika semua validasi lolos, simpan produk ke database.
 	return s.productRepo.Create(data)
 }
+
+func (s *ProductService) GetByID(id int) (*models.Product, error) {
+	if id <= 0 {
+		return nil, errors.New("invalid product id")
+	}
+
+	product, err := s.productRepo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if product == nil {
+		return nil, errors.New("product not found")
+	}
+
+	return product, nil
+}
+
+func (s *ProductService) Update(product *models.Product) error {
+	return s.productRepo.Update(product)
+}
