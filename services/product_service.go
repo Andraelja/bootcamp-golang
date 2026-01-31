@@ -1,22 +1,43 @@
 package services
 
 import (
+	"errors"
 	"task-session-1/models"
 	"task-session-1/repositories"
 )
 
 type ProductService struct {
-	repo *repositories.ProductRepository
+	productRepo  *repositories.ProductRepository
+	categoryRepo *repositories.CategoryRepository
 }
 
-func NewProductService(repo *repositories.ProductRepository) *ProductService {
-	return &ProductService{repo: repo}
+func NewProductService(
+	productRepo *repositories.ProductRepository,
+	categoryRepo *repositories.CategoryRepository,
+) *ProductService {
+	return &ProductService{
+		productRepo:  productRepo,
+		categoryRepo: categoryRepo,
+	}
 }
 
-func (s *ProductService) GetAll () ([]models.Product, error) {
-	return s.repo.GetAll()
+func (s *ProductService) GetAll() ([]models.Product, error) {
+	return s.productRepo.GetAll()
 }
 
 func (s *ProductService) Create(data *models.Product) error {
-	return s.repo.Create(data)
+	if data.CategoryID == 0 {
+		return errors.New("category cannot empty!")
+	}
+
+	category, err := s.categoryRepo.GetByID(data.CategoryID)
+	if err != nil {
+		return err
+	}
+
+	if category == nil {
+		return errors.New("Category not found!")
+	}
+
+	return s.productRepo.Create(data)
 }

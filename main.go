@@ -57,7 +57,7 @@ func main() {
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
 	productRepo := repositories.NewProductRepository(db)
-	productService := services.NewProductService(productRepo)
+	productService := services.NewProductService(productRepo, categoryRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
 	http.HandleFunc("/api/category", categoryHandler.HandleCategory)

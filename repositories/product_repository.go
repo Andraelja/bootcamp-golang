@@ -48,3 +48,26 @@ func (repo *ProductRepository) Create(product *models.Product) error {
 	err := repo.db.QueryRow(query, product.Name, product.Price, product.Stock, product.CategoryID).Scan(&product.ID)
 	return err
 }
+
+func (repo *ProductRepository) GetByID(id int) (*models.Product, error) {
+	query := `
+			SELECT 
+			p.id, 
+			p.name, 
+			p.price,
+			p.category_id
+			stock FROM product p WHERE id=$1
+			`
+	var p models.Product
+	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock, p.CategoryID)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &p, nil
+}

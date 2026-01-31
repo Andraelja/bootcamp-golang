@@ -48,7 +48,7 @@ func (repo *CategoryRepository) GetByID(id int) (*models.Category, error) {
 	var p models.Category
 	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Description)
 	if err == sql.ErrNoRows {
-		return nil, errors.New("kategori tidak ditemukan")
+		return nil, nil
 	}
 	if err != nil {
 		return nil, err
