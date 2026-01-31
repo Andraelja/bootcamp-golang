@@ -26,7 +26,7 @@ func NewProductRepository(db *sql.DB) *ProductRepository {
 }
 
 // GetAll mengambil semua data produk dari database dengan JOIN ke tabel category.
-// Query SQL mengambil data produk dan nama kategori terkait.
+// Query SQL mengambil data produk dan nama product terkait.
 // Mengembalikan slice dari Product dan error jika ada.
 func (repo *ProductRepository) GetAll() ([]models.Product, error) {
 	// Query SQL untuk mengambil semua produk dengan JOIN ke category.
@@ -133,4 +133,30 @@ func (repo *ProductRepository) Update(product *models.Product) error {
 	}
 
 	return nil
+}
+
+// Delete menghapus product berdasarkan ID.
+// Menggunakan DELETE dan memeriksa apakah ada baris yang terpengaruh.
+// Jika tidak ada baris yang terpengaruh, berarti product tidak ditemukan.
+// Mengembalikan error jika delete gagal.
+func (repo *ProductRepository) Delete(id int) error {
+	// Query DELETE untuk menghapus product.
+	query := "DELETE FROM product WHERE id = $1"
+	// Menjalankan query dan mendapatkan result.
+	result, err := repo.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+	// Memeriksa jumlah baris yang terpengaruh.
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// Jika tidak ada baris yang terpengaruh, product tidak ditemukan.
+	if rows == 0 {
+		return errors.New("product not found!")
+	}
+
+	return err
 }

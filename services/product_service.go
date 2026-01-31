@@ -99,6 +99,24 @@ func (s *ProductService) Update(product *models.Product) error {
 	if category == nil {
 		return errors.New("Category not found!")
 	}
-	
+
 	return s.productRepo.Update(product)
+}
+
+// Delete menghapus kategori berdasarkan ID.
+// Fungsi ini memanggil method Delete dari CategoryRepository.
+// Mengembalikan error jika delete gagal.
+func (s *ProductService) Delete(id int) error {
+	// Ambil product
+	product, err := s.productRepo.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	if product == nil {
+		return errors.New("product not found")
+	}
+
+	// Hapus product
+	return s.productRepo.Delete(id)
 }
