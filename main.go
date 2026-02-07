@@ -90,6 +90,10 @@ func main() {
 	http.HandleFunc("/api/product/", productHandler.HandleProductByID)
 	// /api/checkout
 	http.HandleFunc("/api/checkout", transactionHandler.HandleCheckout)
+	// /api/report/hari-ini
+	http.HandleFunc("/api/report/hari-ini", transactionHandler.HandleReportHariIni)
+	// /api/report
+	http.HandleFunc("/api/report", transactionHandler.HandleReport)
 
 	// Menjalankan server HTTP di alamat yang ditentukan.
 	// Jika gagal, aplikasi akan berhenti dengan pesan error.
