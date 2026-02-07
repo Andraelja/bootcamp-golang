@@ -52,7 +52,8 @@ func (h *ProductHandler) HandleProductByID(w http.ResponseWriter, r *http.Reques
 // Memanggil service.GetAll(), lalu encode hasil ke JSON dan kirim sebagai response.
 // Jika ada error, kembalikan status 500 Internal Server Error.
 func (h *ProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	product, err := h.service.GetAll()
+	name := r.URL.Query().Get("name")
+	product, err := h.service.GetAll(name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

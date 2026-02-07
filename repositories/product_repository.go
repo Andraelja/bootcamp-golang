@@ -22,7 +22,7 @@ func NewProductRepository(db *sql.DB) *ProductRepository {
 // GetAll mengambil semua data produk dari database dengan JOIN ke tabel category.
 // Query SQL mengambil data produk dan nama product terkait.
 // Mengembalikan slice dari Product dan error jika ada.
-func (repo *ProductRepository) GetAll() ([]models.Product, error) {
+func (repo *ProductRepository) GetAll(name string) ([]models.Product, error) {
 	// Query SQL untuk mengambil semua produk dengan JOIN ke category.
 	query := `
 			SELECT
@@ -32,8 +32,14 @@ func (repo *ProductRepository) GetAll() ([]models.Product, error) {
 			p.stock,
 			p.category_id
 			FROM product p JOIN category c ON c.id = p.category_id`
+	
+	args := []interface{}{}
+	if name != "" {
+		query += " WHERE p.name ILIKE $1"
+		args = append(args, "%"+name+"%")
+	}
 	// Menjalankan query dan mendapatkan rows.
-	rows, err := repo.db.Query(query)
+	rows, err := repo.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}

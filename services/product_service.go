@@ -30,8 +30,8 @@ func NewProductService(
 // GetAll mengambil semua data produk dari database.
 // Fungsi ini memanggil method GetAll dari ProductRepository.
 // Mengembalikan slice dari Product dan error jika ada.
-func (s *ProductService) GetAll() ([]models.Product, error) {
-	return s.productRepo.GetAll()
+func (s *ProductService) GetAll(name string) ([]models.Product, error) {
+	return s.productRepo.GetAll(name)
 }
 
 // Create membuat produk baru setelah melakukan validasi.
