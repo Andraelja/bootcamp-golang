@@ -74,6 +74,11 @@ func main() {
 	productService := services.NewProductService(productRepo, categoryRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
+	// Transaction
+	transactionRepo := repositories.NewTransactionRepository(db)
+	transactionService := services.NewTransactionService(transactionRepo)
+	transactionHandler := handlers.NewTransactionHandler(transactionService)
+
 	// Mendaftarkan handler untuk endpoint HTTP.
 	// /api/category untuk operasi umum kategori (GET semua, POST buat baru).
 	http.HandleFunc("/api/category", categoryHandler.HandleCategory)
@@ -83,6 +88,8 @@ func main() {
 	http.HandleFunc("/api/product", productHandler.HandleProduct)
 	// /api/product/ untuk operasi berdasarkan ID (GET, PUT, DELETE).
 	http.HandleFunc("/api/product/", productHandler.HandleProductByID)
+	// /api/checkout
+	http.HandleFunc("/api/checkout", transactionHandler.HandleCheckout)
 
 	// Menjalankan server HTTP di alamat yang ditentukan.
 	// Jika gagal, aplikasi akan berhenti dengan pesan error.
